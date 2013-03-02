@@ -5,73 +5,20 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
+	<script src="decimal.js"></script>
+	<script src="fraction.js"></script>
 <script type="text/javascript">
 $(function(){
 	$('#enterDecimal').bind('click', function(){
-		var input = $('#decimal').val();
-		$('#results').text(parseDecimal(input));		
+		var input = new Decimal($('#decimal').val());
+		$('#results').text(input.toFraction());		
 	});
 
 	$('#enterFraction').bind('click', function(){
-		var input = $('#fraction').val();
-		$('#results').text(parseFraction(input));
+		var input = new Fraction($('#fraction').val());
+		$('#results').text(input.toDecimal());
 	});
 });
-
-function parseFraction(input)
-{
-	var splitter = input.split('/'), retval;
-	if (splitter.length = 2)
-	{
-		retval = parseFloat(splitter[0] / splitter[1]);
-		retval = isNaN(retval) ? "Please enter a valid fraction" : retval;
-	}
-	else
-	{
-		retval = "Please enter a valid fraction";
-	}
-	return retval;
-}
-
-function parseDecimal(input)
-{
-	if (!isNaN(parseFloat(input)))
-	{
-	    var integer = Math.floor(input);
-		retval = parseAbsoluteDecimal(integer, input - integer);
-	}	
-	else
-	{
-		retval = input + ' is not a valid number';
-	}
-	return retval;
-}
-
-function parseAbsoluteDecimal(integer, decimal)
-{
-	var maxiter=20, 
-	num = decimal, 
-	epsilon = Math.pow(10, -6), 
-	d = [0,1]; 
-	z = num, 
-	n = 1, 
-	t = 1;
-	for (var i =0; i <= maxiter; i++)
-	{
-		d.push(0);
-	}
-	while (num && t < maxiter && Math.abs((n/d[t]) - num) > epsilon)
-	{
-		t++;
-		z = (1 / (z - Math.floor(z)));
-		d[t] = (d[t-1] * Math.floor(z)) + d[t-2];
-		n = Math.floor((num * d[t]) + 0.5); 
-	}
-
-	return integer + ' and ' + n + '/' + d[t];
-}
-
-
 </script>
 <p id="validation"></p>
 <input type="text" id="decimal" placeholder="Enter a Decimal" />
