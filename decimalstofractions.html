@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fraction to Decimal, Decimal To Fraction</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+$(function(){
+	$('#enterDecimal').bind('click', function(){
+		var input = $('#decimal').val();
+		$('#results').text(parseDecimal(input));		
+	});
+
+	$('#enterFraction').bind('click', function(){
+		var input = $('#fraction').val();
+		$('#results').text(parseFraction(input));
+	});
+});
+
+function parseFraction(input)
+{
+	var splitter = input.split('/'), retval;
+	if (splitter.length = 2)
+	{
+		retval = parseFloat(splitter[0] / splitter[1]);
+		retval = isNaN(retval) ? "Please enter a valid fraction" : retval;
+	}
+	else
+	{
+		retval = "Please enter a valid fraction";
+	}
+	return retval;
+}
+
+function parseDecimal(input)
+{
+	if (!isNaN(parseFloat(input)))
+	{
+	    var integer = Math.floor(input);
+		retval = parseAbsoluteDecimal(integer, input - integer);
+	}	
+	else
+	{
+		retval = input + ' is not a valid number';
+	}
+	return retval;
+}
+
+function parseAbsoluteDecimal(integer, decimal)
+{
+	var maxiter=20, 
+	num = decimal, 
+	epsilon = Math.pow(10, -6), 
+	d = [0,1]; 
+	z = num, 
+	n = 1, 
+	t = 1;
+	for (var i =0; i <= maxiter; i++)
+	{
+		d.push(0);
+	}
+	while (num && t < maxiter && Math.abs((n/d[t]) - num) > epsilon)
+	{
+		t++;
+		z = (1 / (z - Math.floor(z)));
+		d[t] = (d[t-1] * Math.floor(z)) + d[t-2];
+		n = Math.floor((num * d[t]) + 0.5); 
+	}
+
+	return integer + ' and ' + n + '/' + d[t];
+}
+
+
+</script>
+<p id="validation"></p>
+<input type="text" id="decimal" placeholder="Enter a Decimal" />
+<input type="button" id="enterDecimal" value="get fraction" />
+<input type="text" id="fraction" placeholder="Enter a Faction" />
+<input type="button" id="enterFraction" value="get decimal" />
+<p id="results"></p>
+
+</body>
+</html>
